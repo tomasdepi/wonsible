@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  ubuntu-server:
+    build:
+      dockerfile: Dockerfile-ubuntu
+      context: .
+    container_name: server-ubuntu-1
+    ports:
+      - "221:22"

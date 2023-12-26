@@ -1,0 +1,8 @@
+---
+tasks:
+  - module: package
+    args:
+      name: nginx
+      version: 1.14.0-0ubuntu11
+      state: present
+   
