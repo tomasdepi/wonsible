@@ -33,7 +33,7 @@ I decided to merge some into the same module, since the purposes are related (li
 It serves to manage packages, install, remove or upgrade to specific versions
 
 | Argument  | Required | Comments                                                             |
-|-----------|---------------------------------------------------------------------------------|
+|-----------|----------|----------------------------------------------------------------------|
 | name      |   True   | Package name                                                         |
 | state     |   True   | Wheter the package is installed or not (present orabsent)            |
 | version   |   False  | Version of the package, if not defined, default version will be used |
@@ -59,7 +59,7 @@ Controls the services on the remote machine, the support options are
 * restart
 
 | Argument  | Required | Comments                          |
-|-----------|----------------------------------------------|
+|-----------|----------|-----------------------------------|
 | name      |   True   | Package name                      |
 | state     |   True   | start, stop or restart            |
 
