@@ -1,6 +1,6 @@
 from fabric import Connection
 from abc import ABC
-from constants import ABSENT_STATE, PRESENT_STATE, TOUCH_STATE, FILE_STATE, DIRECTORY_STATE
+from constants import ABSENT_STATE, PRESENT_STATE, TOUCH_STATE, FILE_STATE, DIRECTORY_STATE, SERVICE_SUPPORTED_STATES
 from utils import get_missing_mandatory_keys
 import os
 
@@ -103,6 +103,7 @@ class File(TaskModule):
                 print(f'File {self.path} already exists')
             else:
                 self.conn.run(f'touch {self.path}')
+                print(f'File {self.path} created')
         elif self.state == ABSENT_STATE:
             self._delete_resource()
             return
@@ -129,6 +130,11 @@ class Service(TaskModule):
 
         self.service_name = args['name']
         self.state = args['state']
+
+        if self.state not in SERVICE_SUPPORTED_STATES:
+            print('Service State not available')
+            print(f'The supported states are {", ".join(SERVICE_SUPPORTED_STATES)}')
+            exit(1)
 
     def run(self):
         self.conn.sudo(f'service {self.service_name} {self.state}')
