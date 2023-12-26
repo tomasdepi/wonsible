@@ -13,12 +13,13 @@ The tool is supposed to run through CLI, some arguments are passed directly in t
 | Parameter       | Short Alias | Comments                                                             |
 |-----------------|-------------|----------------------------------------------------------------------|
 | --playbook_file | -f          | absolute or relative path to the playbook yaml file                  |
-| --password      | -p          | SSH password for the user defined in the playbook                    |
+| --username      | -u          | SSH username to 
+| --password      | -p          | SSH password for the user                                            |
 
 
 Example:
 ```
-python wonsible.py -f my-playbooks/service.yaml -p wonolo
+python src/wonsible.py -f my-playbooks/service.yaml -u ubuntu -p depi
 ```
 
 Refer to the following sections for configuration of the playbook and invocation of modules
