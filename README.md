@@ -4,11 +4,12 @@ An Ansible implementation for Wonolo
 
 ## Disclaimer
 
-For the Ubuntu 18.04 environment, I reused a Dockerfile of my own authory that I used back in the days I was learning Ansible, that file (along others) and some playbooks, can be found [in this repo](https://github.com/tomasdepi/ansible)
+For the Ubuntu 18.04 environment, I reused a Dockerfile of my own authory that I used back in the days I was learning Ansible, that file (along others) and some playbooks, can be found [in this repo](https://github.com/tomasdepi/ansible). Feel free to check out that repo alonside other public repos I have in my github profile
+
 
 ## How to run this tool
 
-The tool is supposed to run through CLI, some arguments are passed directly in the playbook yaml file, others (due to being sensitive) through CLI
+The tool is supposed to run through CLI, some arguments are passed directly in the playbook yaml file, others (due to being sensitive) through CLI, all the three following parameters are mandatory.
 
 | Parameter       | Short Alias | Comments                                                             |
 |-----------------|-------------|----------------------------------------------------------------------|
@@ -25,6 +26,11 @@ python src/wonsible.py -f my-playbooks/service.yaml -u ubuntu -p depi
 Refer to the following sections for configuration of the playbook and invocation of modules
 
 ## Playbook Structure
+
+Ansible supports multiple playbook or multiple yamls in the same file.
+For simplicity, Wonsible supports only one yaml structure per file so far.
+
+The yaml structure requires two parameters, both mandatory:
 
 | Parameter | Required | Comments                                                                                                                              |
 |-----------|----------|---------------------------------------------------------------------------------------------------------------------------------------|
@@ -43,7 +49,7 @@ As requested, this tool supports multiple modules and functionalities listed bel
 * command (run random remote commands)
 
 
-I decided to merge some into the same module, since the purposes are related (like create a file and directory), therefore we have four modules but they support the six fuctionalities
+I decided to merge some into the same module, since the purposes are related (like create a file and directory), therefore we have four modules but they support the six fuctionalities.
 
 ### Package Module
 

@@ -5,3 +5,5 @@ FILE_STATE = 'file'
 DIRECTORY_STATE = 'directory'
 
 PLAYBOOK_MANDATORY_KEYS = ['host', 'tasks']
+
+SERVICE_SUPPORTED_STATES = ['start', 'stop', 'restart']
