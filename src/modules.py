@@ -1,6 +1,8 @@
 from fabric import Connection
 from abc import ABC
 from constants import ABSENT_STATE, PRESENT_STATE, TOUCH_STATE, FILE_STATE, DIRECTORY_STATE
+from utils import get_missing_mandatory_keys
+import os
 
 class TaskModule(ABC):
     def __init__(self, conn: Connection, args: dict):
@@ -9,7 +11,7 @@ class TaskModule(ABC):
         self._check_required_args()
 
     def _check_required_args(self) -> bool:
-        missing_args = [arg for arg in self.required_args if arg not in self.args]
+        missing_args = get_missing_mandatory_keys(self.required_args, self.args)
         
         if missing_args:
             print(f'The following args are missing for {self.__class__.__name__} module, aborting')
@@ -47,15 +49,18 @@ class Package(TaskModule):
 
     def _uninstall_package(self):
         self.conn.sudo(f'apt remove -y {self.package_name}')
-        self.conn.sudo(f'apt auto-remove')
+        self.conn.sudo(f'apt auto-remove -y')
 
     def _get_package_version(self) -> str:
-        return self.conn.run('dpkg -l | awk \'$2=="nginx" { print $3 }\'', hide=True, warn=True).stdout
+        return self.conn.run(f'dpkg -l | awk \'$2=="{self.package_name}" {{ print $3 }}\'', hide=True, warn=True).stdout.rstrip()
 
     def run(self):
         if self.state == PRESENT_STATE and self._is_package_installed():
             if self._get_package_version() == self.version:
                 print('Nothing to do, package is already installed and same version')
+            else:
+                print('Package found but other version, trying to update')
+                self._install_package()
 
         elif self.state == ABSENT_STATE and not self._is_package_installed():
             print('Nothing to do, package is not installed')
@@ -83,13 +88,7 @@ class File(TaskModule):
         }
 
     def _check_resource_exist(self) -> bool:
-        return not bool(self.conn.run(f'test -e {self.path}').return_code)
-
-    # def _is_resource_a_file(self) -> bool:
-    #     return not bool(self.conn.run(f'test -f {self.path}').status_code)
-    
-    # def _is_resource_a_directory(self) -> bool:
-    #     return not bool(self.conn.run(f'test -d {self.path}').status_code)
+        return not bool(self.conn.run(f'test -e {self.path}', warn=True).return_code)
     
     def _delete_resource(self):
         if not self._check_resource_exist():
@@ -99,15 +98,24 @@ class File(TaskModule):
         self.conn.run(f'rm -rf {self.path}')
 
     def run(self):
-        if self.state == TOUCH_STATE and not self._check_resource_exist():
-            self.conn.run(f'touch {self.path}')
+        if self.state == TOUCH_STATE:
+            if self._check_resource_exist():
+                print(f'File {self.path} already exists')
+            else:
+                self.conn.run(f'touch {self.path}')
         elif self.state == ABSENT_STATE:
             self._delete_resource()
             return
         elif self.state == FILE_STATE:
-            self.conn.put(self.args['src'], self.path)
+            base_file = os.path.basename(self.path)
+            self.conn.put(self.args['src'], f'/tmp/{base_file}')
+            self.conn.sudo(f'mv /tmp/{base_file} {self.path}')
         elif self.state == DIRECTORY_STATE:
-            self.conn.run(f'mkdir -p {self.path}')
+            if self._check_resource_exist():
+                print(f'Directory {self.path} already exists')
+            else:
+                self.conn.run(f'mkdir -p {self.path}')
+                print(f'Directory {self.path} created')
 
         for config in self.argument_to_command.keys():
             if config in self.args:
