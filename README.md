@@ -6,13 +6,29 @@ An Ansible implementation for Wonolo
 
 For the Ubuntu 18.04 environment, I reused a Dockerfile of my own authory that I used back in the days I was learning Ansible, that file (along others) and some playbooks, can be found [in this repo](https://github.com/tomasdepi/ansible)
 
+## How to run this tool
+
+The tool is supposed to run through CLI, some arguments are passed directly in the playbook yaml file, others (due to being sensitive) through CLI
+
+| Parameter       | Short Alias | Comments                                                             |
+|-----------------|-------------|----------------------------------------------------------------------|
+| --playbook_file | -f          | absolute or relative path to the playbook yaml file                  |
+| --password      | -p          | SSH password for the user defined in the playbook                    |
+
+
+Example:
+```
+python wonsible.py -f my-playbooks/service.yaml -p wonolo
+```
+
+Refer to the following sections for configuration of the playbook and invocation of modules
+
 ## Playbook Structure
 
-| Parameter | Comments                                                                                                                               |
-|-----------|----------------------------------------------------------------------------------------------------------------------------------------|
-| host      | IP or hostname of the remote endpoint                                                                                                  |
-| username  | SSH username                                                                                                                           |
-| tasks     | List of tasks, each task must have 'module' and 'args' attributes Refer to each Module documentation for required additional arguments |
+| Parameter | Required | Comments                                                                                                                              |
+|-----------|----------|---------------------------------------------------------------------------------------------------------------------------------------|
+| host      |   True   |IP or hostname of the remote endpoint                                                                                                  |
+| tasks     |   True   |List of tasks, each task must have 'module' and 'args' attributes Refer to each Module documentation for required additional arguments |
 
 ## Modules
 
