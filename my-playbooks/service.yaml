@@ -1,11 +1,18 @@
 ---
 host: 127.0.0.1:221
-username: ubuntu
 tasks:
   - module: package
     args:
       name: nginx
       state: present
+  - module: file
+    args: 
+      path: /var/www/html/index.html
+      src: index.html
+      owner: www-data
+      group: www-data
+      mode: 777
+      state: file
   - module: service
     args:
       name: nginx

@@ -1,10 +1,9 @@
 ---
 host: 127.0.0.1:221
-username: ubuntu
 tasks:
   - module: file
     args:
-      path: /tmp/depi/test
+      path: /tmp/depi/test-2
       owner: ubuntu
       group: ubuntu
       mode: 700

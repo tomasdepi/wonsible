@@ -1,6 +1,5 @@
 ---
 host: 127.0.0.1:221
-username: ubuntu
 tasks:
   - module: file
     args:
@@ -12,8 +11,8 @@ tasks:
   - module: file
     args:
       path: /tmp/depi/test/wonolo.txt
-      owner: depi
-      group: depi
+      owner: ubuntu
+      group: ubuntu
       mode: 770
       state: touch
   - module: file
@@ -21,6 +20,6 @@ tasks:
       path: /tmp/depi/test/wonolo2.txt
       owner: ubuntu
       group: ubuntu
-      mode: 701
+      mode: 777
       state: file
       src: Dockerfile-ubuntu
